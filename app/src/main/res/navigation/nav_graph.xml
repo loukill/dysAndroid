@@ -15,6 +15,7 @@
         android:name="com.example.bottomnavbar.view.fragment.ForumFragment"
         android:label="@string/forum_fragment"
         tools:layout="@layout/fragment_forum" />
+
     <fragment
         android:id="@+id/activityFragment"
         android:name="com.example.bottomnavbar.view.fragment.ActivityFragment"

@@ -5,11 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.ForumFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvforum"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:text="@string/forum_fragment" />
+        tools:listitem="@layout/single_item_forum"/>
+    <!-- Ajoutez ce bouton à la fin du fichier -->
+
 
 </FrameLayout>

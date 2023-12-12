@@ -7,28 +7,17 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.bottomnavbar.view.fragment.HomeFragment"
+        android:name="tn.esprit.green_world.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/forumFragment"
-        android:name="com.example.bottomnavbar.view.fragment.ForumFragment"
-        android:label="@string/forum_fragment"
-        tools:layout="@layout/fragment_forum" />
+        android:id="@+id/favoriteFragment"
+        android:name="tn.esprit.green_world.fragments.FavProduitFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/favproduit_fragment" />
     <fragment
-        android:id="@+id/activityFragment"
-        android:name="com.example.bottomnavbar.view.fragment.ActivityFragment"
-        android:label="activity_fragment"
-        tools:layout="@layout/fragment_activity" />
-    <fragment
-        android:id="@+id/productFragment"
-        android:name="com.example.bottomnavbar.view.fragment.ProductFragment"
-        android:label="@string/product_fragment"
-        tools:layout="@layout/fragment_product" />
-    <fragment
-        android:id="@+id/biblioFragment"
-        android:name="com.example.bottomnavbar.view.fragment.BiblioFragment"
-        android:label="@string/biblio_fragment"
-        tools:layout="@layout/fragment_biblio"/>
-
+        android:id="@+id/produitFragment"
+        android:name="tn.esprit.green_world.fragments.ProduitFragment"
+        android:label="fragment_produit"
+        tools:layout="@layout/fragment_produit" />
 </navigation>

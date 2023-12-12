@@ -14,7 +14,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/baseline_image_24"
+        android:src="@drawable/photo_forum"
         android:background="@drawable/cornered_background"
         android:paddingEnd="10dp"
         android:contentDescription="Forum Image" />
@@ -56,7 +56,12 @@
 
     </LinearLayout>
 
-    <ImageView
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <ImageButton
         android:id="@+id/modifyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,12 +70,15 @@
         android:contentDescription="Modify Button"
         app:tint="@color/blue" />
 
-    <Button
-        android:id="@+id/detailButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voir les détails"
-        android:layout_gravity="end"/>
+        <ImageButton
+            android:id="@+id/detailsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Modify Button"
+            android:paddingEnd="10dp"
+            android:src="@drawable/baseline_info_24"
+            app:tint="@color/blue" />
 
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,20 +1,48 @@
 // ForumViewHolder.kt
 package com.example.bottomnavbar.view.viewholders
 
+import android.content.Context
+import android.content.Intent
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomnavbar.R
 import com.example.bottomnavbar.models.Forum
+import com.example.bottomnavbar.view.activities.ForumDetails
+import com.squareup.picasso.Picasso
 
-class ForumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ForumViewHolder(private val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
     private val contentTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+    private val detailButton: ImageButton = itemView.findViewById(R.id.detailsButton)
+    private val image: ImageView = itemView.findViewById(R.id.forumImageView)
+
+
+
 
     fun bind(forum: Forum) {
+        Picasso.get()
+            .load("http://10.0.2.2:3000/img/forum/" + forum.image)
+            .fit()
+            .centerInside()
+            .into(image);
         titleTextView.text = forum.title
         contentTextView.text = forum.description
-        // Ajoutez d'autres vues au besoin
+
+        detailButton.setOnClickListener {
+
+                val intent = Intent(context, ForumDetails::class.java)
+                intent.putExtra("forumTitle",forum.title)
+                intent.putExtra("description",forum.description)
+                intent.putExtra("forumImage",forum.image)
+
+                context.startActivity(intent)
+
+        }
+
     }
 }

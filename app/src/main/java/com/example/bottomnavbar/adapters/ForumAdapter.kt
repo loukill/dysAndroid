@@ -1,31 +1,30 @@
 // ForumAdapter.kt
 package com.example.bottomnavbar.adapters
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomnavbar.models.Forum
 import com.example.bottomnavbar.R
-import com.example.bottomnavbar.view.activities.ForumDetails
 import com.example.bottomnavbar.view.fragment.ForumFragment
 import com.example.bottomnavbar.view.viewholders.ForumViewHolder
 import com.example.bottomnavbar.viewmodel.ForumViewModel
+import kotlinx.coroutines.launch
+import kotlin.collections.MutableList
 
-class ForumAdapter( val forums: List<Forum>, private val viewModel: ForumViewModel, private val lifecycleOwner: ForumFragment) : RecyclerView.Adapter<ForumViewHolder>(){
 
+class ForumAdapter(val forums: List<Forum>, private val viewModel: ForumViewModel, private val lifecycleOwner: ForumFragment) : RecyclerView.Adapter<ForumViewHolder>() {
 
+    private val mutableForums: MutableList<Forum> = forums.toMutableList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForumViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.single_item_forum, parent, false)
-        return ForumViewHolder(parent.context,view)
+        return ForumViewHolder(parent.context, view)
     }
 
     override fun onBindViewHolder(holder: ForumViewHolder, position: Int) {
-        val forum = forums[position]
+        val forum = mutableForums[position]
         holder.bind(forum)
 
 //        // Ajoutez un clic sur le bouton pour chaque élément
@@ -40,6 +39,29 @@ class ForumAdapter( val forums: List<Forum>, private val viewModel: ForumViewMod
     }
 
     override fun getItemCount(): Int {
-        return forums.size
+        return mutableForums.size
     }
+
+    fun getForumIdAtPosition(position: Int): String {
+        return mutableForums[position].id
+    }
+
+    fun removeForum(position: Int) {
+        if (position >= 0 && position < mutableForums.size) {
+            // Récupérer l'ID du forum à la position spécifiée
+            val forumId = getForumIdAtPosition(position)
+
+            if (forumId != null) {
+                viewModel.viewModelScope.launch {
+                    viewModel.deleteForum(forumId)
+
+                    mutableForums.removeAt(position)
+
+                    notifyItemRemoved(position)
+                }
+            }
+        }
+    }
+
+
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomnavbar.R
 import com.example.bottomnavbar.models.Forum
 import com.example.bottomnavbar.view.activities.ForumDetails
+import com.example.bottomnavbar.view.activities.ForumUpdate
 import com.squareup.picasso.Picasso
 
 class ForumViewHolder(private val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -19,6 +20,7 @@ class ForumViewHolder(private val context: Context, itemView: View) : RecyclerVi
     private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
     private val contentTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
     private val detailButton: ImageButton = itemView.findViewById(R.id.detailsButton)
+    private val modifyButton: ImageButton = itemView.findViewById(R.id.modifyButton)
     private val image: ImageView = itemView.findViewById(R.id.forumImageView)
 
 
@@ -41,6 +43,17 @@ class ForumViewHolder(private val context: Context, itemView: View) : RecyclerVi
                 intent.putExtra("forumImage",forum.image)
 
                 context.startActivity(intent)
+
+        }
+
+        modifyButton.setOnClickListener {
+
+            val intent = Intent(context, ForumUpdate::class.java)
+            intent.putExtra("forumTitle",forum.title)
+            intent.putExtra("description",forum.description)
+            intent.putExtra("forumImage",forum.image)
+
+            context.startActivity(intent)
 
         }
 

@@ -18,7 +18,7 @@ class RetrofitClient {
                     "Authorization",
                     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTRkZjE4YjUzNWVjMDRlZmVkYWJiMGIiLCJ1c2VybmFtZSI6Im1hbGVrIiwiaWF0IjoxNzAxMjcwNTU3LCJleHAiOjE3MDEyNzc3NTd9.TgGqbVMygaL6DFB_EyPylftB-9pRYJWryCEWKZ_Tyw4"
                 )
-                .method(original.method(), original.body())
+                .method(original.method, original.body)
             val request = requestBuilder.build()
             chain.proceed(request)
         }
@@ -29,4 +29,8 @@ class RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
+
+    val forumService: ForumService
+        get() = retrofit.create(ForumService::class.java)
+
 }

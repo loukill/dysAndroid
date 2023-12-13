@@ -1,22 +1,27 @@
 package com.example.bottomnavbar.view.fragment
 
+
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bottomnavbar.R
 import com.example.bottomnavbar.adapters.ForumAdapter
 import com.example.bottomnavbar.network.ForumService
 import com.example.bottomnavbar.network.RetrofitClient
+import com.example.bottomnavbar.view.activities.ForumAdd
+import com.example.bottomnavbar.viewmodel.ForumViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.bottomnavbar.viewmodel.ForumViewModel
 
 class ForumFragment : Fragment() {
 
@@ -24,7 +29,7 @@ class ForumFragment : Fragment() {
     private lateinit var forumApiService: ForumService
     private lateinit var recyclerView: RecyclerView
     private val viewModel: ForumViewModel by viewModels()
-
+    private lateinit var addButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,8 +38,9 @@ class ForumFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_forum, container, false)
 
         recyclerView = view.findViewById(R.id.rvforum)
-        recyclerView.adapter = ForumAdapter(emptyList(),viewModel, this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        addButton = view.findViewById(R.id.addButton)
 
         // Initialize Retrofit service
         forumApiService = RetrofitClient().retrofit.create(ForumService::class.java)
@@ -42,17 +48,29 @@ class ForumFragment : Fragment() {
         // Fetch forum data from the API
         fetchForumData()
 
+        addButton.setOnClickListener {
+            val intent = Intent(requireContext(), ForumAdd::class.java)
+            startActivity(intent)
+        }
+
+        // Ajouter ItemTouchHelper pour la suppression par glissement
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback())
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
         return view
     }
 
     private fun fetchForumData() {
-        // Utilisation de lifecycleScope.launch pour effectuer l'appel réseau dans un coroutine
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val response = forumApiService.getAllForums()
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        forumAdapter = response.body()?.let { ForumAdapter(it, viewModel, this@ForumFragment) }!!
+                        forumAdapter = ForumAdapter(
+                            response.body() ?: emptyList(),
+                            viewModel,
+                            this@ForumFragment
+                        )
                         recyclerView.adapter = forumAdapter
                     } else {
                         // Handle API error
@@ -63,12 +81,26 @@ class ForumFragment : Fragment() {
                 // Handle network failure
             }
         }
-
     }
 
-    private fun navigateToForumDetail(forumId: String) {
-        // TODO: Implémentez la logique de navigation vers ForumDetailActivity ou ForumDetailFragment
-        // Passez le forumId à l'écran de détails
-        // Vous pouvez utiliser Intent ou FragmentTransaction en fonction de votre méthode de navigation
+    private inner class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            // Récupérer l'ID du forum à partir de l'adapter
+            val forumId = forumAdapter.getForumIdAtPosition(viewHolder.adapterPosition)
+
+            // Appeler deleteForum à l'intérieur d'une coroutine
+            lifecycleScope.launch {
+                viewModel.deleteForum(forumId)
+                forumAdapter.removeForum(viewHolder.adapterPosition)
+
+            }
+        }
     }
+
+
 }
+
